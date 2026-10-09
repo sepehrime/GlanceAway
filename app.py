@@ -3,6 +3,7 @@ import time
 import tkinter as tk
 from tkinter import messagebox, ttk
 
+version = "V1.1-61009"
 
 def main():
     root = tk.Tk()
@@ -20,7 +21,7 @@ def main():
     phase = ttk.Label(content, text="WORKING", font=("TkDefaultFont", 12, "bold"))
     phase.grid(row=1, column=0, pady=(0, 4))
 
-    countdown = ttk.Label(content, text="25:00", font=("TkDefaultFont", 36))
+    countdown = ttk.Label(content, text="25:00", font=("Monaco", 36))
     countdown.grid(row=2, column=0, pady=(0, 20))
 
     remaining_seconds = 25 * 60
@@ -222,6 +223,8 @@ def main():
     ttk.Button(buttons, text="Reset", command=reset_timer).grid(
         row=0, column=2, padx=4
     )
+    credits = ttk.Label(content, text=f"{version}  DWC-All Rights Reserved", font=("Courier New", 8, "italic"))
+    credits.grid(row=5, column=0, pady=80)
 
     root.mainloop()
 
