@@ -7,7 +7,7 @@ from tkinter import messagebox, ttk
 def main():
     root = tk.Tk()
     root.title("GlanceAway")
-    root.geometry("360x360")
+    root.geometry("400x360")
     root.minsize(320, 340)
 
     content = ttk.Frame(root, padding=24)
