@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 version = "V1.1-61009"
+# Keeps the countdown short enough to fit the window.
+MAX_MINUTES = 999
 
 def main():
     root = tk.Tk()
@@ -48,33 +50,19 @@ def main():
 
     def read_duration(entry, name):
         value = entry.get()
-        if not value.isascii() or not value.isdecimal():
-            messagebox.showerror(
-                f"Invalid {name} duration",
-                "Enter a positive whole number of minutes.",
-                parent=root,
-            )
-            return None
-
-        try:
+        # isascii() blocks non-English digits like "٥", which isdecimal() accepts.
+        # The length check stops int() from failing on huge digit strings.
+        if value.isascii() and value.isdecimal() and len(value) <= 4:
             minutes = int(value)
-        except ValueError:
-            messagebox.showerror(
-                f"Invalid {name} duration",
-                "Enter a positive whole number of minutes.",
-                parent=root,
-            )
-            return None
+            if 1 <= minutes <= MAX_MINUTES:
+                return minutes
 
-        if minutes <= 0:
-            messagebox.showerror(
-                f"Invalid {name} duration",
-                "Enter a positive whole number of minutes.",
-                parent=root,
-            )
-            return None
-
-        return minutes
+        messagebox.showerror(
+            f"Invalid {name} duration",
+            f"Enter a whole number of minutes from 1 to {MAX_MINUTES}.",
+            parent=root,
+        )
+        return None
 
     def read_durations():
         work_minutes = read_duration(work_duration, "work")
@@ -224,7 +212,7 @@ def main():
         row=0, column=2, padx=4
     )
     credits = ttk.Label(content, text=f"{version}  DWC-All Rights Reserved", font=("Courier New", 8, "italic"))
-    credits.grid(row=5, column=0, pady=80)
+    credits.grid(row=5, column=0, pady=(16, 0))
 
     root.mainloop()
 
