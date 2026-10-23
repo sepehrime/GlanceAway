@@ -3,7 +3,7 @@ import time
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-version = "V1.1-61009"
+version = "V1.1-61022"
 # Keeps the countdown short enough to fit the window.
 MAX_MINUTES = 999
 
@@ -41,12 +41,41 @@ def main():
         countdown.config(text=f"{minutes:02}:{seconds:02}")
 
     def notify_phase_change(next_phase):
-        message = (
-            "Eyes up - your break starts now. Give them a little distance."
-            if next_phase == "BREAK"
-            else "Break complete - ease back into your next focus session."
-        )
-        messagebox.showinfo("GlanceAway", message, parent=root)
+        if next_phase == "BREAK":
+            heading = "Time for a break"
+            message = "Eyes up - give them a little distance."
+        else:
+            heading = "Back to work"
+            message = "Break complete - ease back into your next focus session."
+
+        # A standard message box can open behind other apps. This window floats
+        # above every app, so the user sees it even when the sound is muted.
+        alert = tk.Toplevel(root)
+        alert.title("GlanceAway")
+        alert.resizable(False, False)
+        alert.attributes("-topmost", True)
+
+        frame = ttk.Frame(alert, padding=(64, 40))
+        frame.pack(fill="both", expand=True)
+        ttk.Label(frame, text=heading, font=("TkDefaultFont", 32, "bold")).pack()
+        ttk.Label(frame, text=message, font=("TkDefaultFont", 15)).pack(pady=(10, 28))
+        ttk.Button(frame, text="OK", command=alert.destroy).pack()
+        alert.bind("<Return>", lambda _event: alert.destroy())
+        alert.bind("<Escape>", lambda _event: alert.destroy())
+
+        alert.update_idletasks()
+        x = (alert.winfo_screenwidth() - alert.winfo_reqwidth()) // 2
+        y = (alert.winfo_screenheight() - alert.winfo_reqheight()) // 3
+        alert.geometry(f"+{x}+{y}")
+        alert.lift()
+        alert.focus_force()
+        root.bell()
+
+        # Block the main window until OK is clicked, so the next phase only
+        # starts once the user has seen the alert.
+        alert.update()
+        alert.grab_set()
+        root.wait_window(alert)
 
     def read_duration(entry, name):
         value = entry.get()
