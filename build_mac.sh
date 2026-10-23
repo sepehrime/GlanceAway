@@ -40,7 +40,7 @@ mkdir -p "$BUILD_DIR" "$OUTPUT_DIR"
     --distpath "$OUTPUT_DIR" \
     --workpath "$BUILD_DIR/pyinstaller" \
     --specpath "$BUILD_DIR" \
-    "$PROJECT_DIR/app.py"
+    "$PROJECT_DIR/GlanceAway.py"
 
 hdiutil create \
     -volname GlanceAway \

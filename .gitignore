@@ -1,2 +1,12 @@
 .venv/
 docs/
+.DS_Store
+__pycache__/
+
+# Build output from build_mac.sh
+/build/
+/release/
+/dist/
+/GlanceAway.spec
+CLAUDE.md
+
